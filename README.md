@@ -96,6 +96,8 @@ Weather had little impact on term frequency in this window:
 
 ## 6) Repository Layout
 
+Click on the zip file to access!
+
 ```
 microtrend-radar-sql/
 ├─ db/
@@ -112,6 +114,7 @@ microtrend-radar-sql/
 │  ├─ velocity_latest.csv
 │  ├─ price_momentum_latest.csv
 │  ├─ weather_lift.csv
+│  ├─ top_risers.csv
 ├─ docker-compose.yml                  # Postgres + PostGIS + Metabase + Adminer
 ├─ .env.example
 ```
