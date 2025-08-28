@@ -1,19 +1,16 @@
 # Microtrend Radar (SQL‑first)
 
-**Street‑to‑Store Fashion Signals** — a reproducible, SQL‑forward project that detects neighborhood‑level fashion microtrends from resale listings and related signals (weather, runway).
+**Street‑to‑Store Fashion Signals**: a SQL‑forward project that detects neighborhood‑level (SoHo & Williamsburg) fashion microtrends from resale listings and related signals (weather, runway).
 
 ---
 
 ## 1) Problem Statement & Research Questions
 
-**Goal:** Use simple, scalable SQL to reveal **emerging fashion microtrends** and answer:
+**Goal:** Use SQL to reveal **emerging fashion microtrends** and answer:
 
 - **RQ1 — Trend Velocity:** Which terms (e.g., *ballet flats*, *metallic*, *neon green*) are accelerating **by neighborhood** right now?
 - **RQ2 — Price Momentum:** Are prices for a term rising or falling in the last week vs the prior week?
 - **RQ3 — Weather Lift:** Do rainy days amplify or suppress certain trends?
-- **RQ4 — Runway → Resale Lag:** How long after a runway show do we observe a measurable spike in resale interest?
-
-The project favors **Postgres + PostGIS** for local work, with **BigQuery** SQL equivalents for serverless scale.
 
 ---
 
@@ -23,13 +20,10 @@ The project favors **Postgres + PostGIS** for local work, with **BigQuery** SQL 
 - **Neighborhoods** — SoHo & Williamsburg polygons (coarse demo shapes).  
 - **Terms** — canonical tags plus synonyms (e.g., `metallic` ⇔ `chrome`, `silver`, `foil`).  
 - **Weather (daily)** — clear/rain flags across the time window.  
-- **Runway Looks (toy)** — designer, season, show date, tags.
-
-> Replace with your real feeds when ready; schema is intentionally light-weight.
 
 ---
 
-## 3) Approach (high level)
+## 3) Approach 
 
 1. **Normalize tags → canonical terms** via a synonyms table.  
 2. **Geo‑join** listings into neighborhoods using lon/lat and polygons (PostGIS).  
@@ -37,7 +31,6 @@ The project favors **Postgres + PostGIS** for local work, with **BigQuery** SQL 
    - **Trend Velocity** per (neighborhood, term): 7‑day sum vs previous 7‑day sum.  
    - **Price Momentum** per term: 7‑day median price vs previous 7‑day median.  
    - **Weather Lift** per term: mean frequency on rainy days ÷ overall mean.  
-   - **Runway Lag** per term: first 7‑day spike ≥ **3×** baseline minus show date.
 4. **Materialized Views** for fast dashboards (Metabase‑ready).  
 5. **Batch export** of results to `/outputs/*.csv` for GitHub transparency.
 
@@ -46,6 +39,24 @@ The project favors **Postgres + PostGIS** for local work, with **BigQuery** SQL 
 ## 4) Key Results (from the 400‑row demo run)
 
 **Latest day analyzed:** **2025‑08‑09**
+
+In short: 
+
+Williamsburg: 
+- Ballet flats are very popular; weekly mentions rose from 1 to 6 (+500% jump). 
+- Neon green grew a bit (17 to 19, +11.8%)
+  
+SoHo: 
+- Ballet flats are also popular but more modestly; rose from 3 to 5 (+66.7%)
+- Neon green fell sharply (21 to 7, −66.7%)
+- Metallic items grew slightly (from 7 to 8, +14.3%)
+
+Prices are moving differently than volume: 
+- Neon green shows positive price momentum: the 7-day median price is 23.5% higher than the prior week, suggesting buyers are willing to pay more.
+- Metallic and ballet flats show negative price momentum (−11.5% and −25.0% respectively), which means more listings or interest without higher prices (consistent with accessible, fast-moving trends)
+
+Weather had little impact on term frequency in this window: 
+- Rain-day activity was roughly the same as average
 
 ### 4.1 Trend Velocity (d7 vs prev7) — top items
 - **Williamsburg · ballet flats** — d7 = 6, prev7 = 1 → **+500%**
@@ -70,12 +81,6 @@ The project favors **Postgres + PostGIS** for local work, with **BigQuery** SQL 
 
 > Source: `outputs/weather_lift.csv`
 
-### 4.4 Runway → Resale Lag
-Using a **3× baseline** spike rule in this window, no term crossed the threshold → lag not established.  
-(With **2×** or a longer horizon, lags typically emerge.)
-
-> Source: `outputs/runway_lag.csv`
-
 ---
 
 ## 5) Repository Layout
@@ -92,14 +97,23 @@ microtrend-radar-sql/
 │  ├─ neighborhoods_sample.csv
 │  ├─ terms_full.csv
 │  ├─ daily_weather_full.csv
-│  └─ runway_looks_more.csv
 ├─ outputs/                            # Computed results (CSV)
 │  ├─ velocity_latest.csv
 │  ├─ price_momentum_latest.csv
 │  ├─ weather_lift.csv
-│  └─ runway_lag.csv
 ├─ docker-compose.yml                  # Postgres + PostGIS + Metabase + Adminer
 ├─ .env.example
 ├─ LICENSE
 └─ README.md
 ```
+
+## 6) Metric Definitions
+
+- **Trend Velocity (per neighborhood, term)**  
+  d7 = 7‑day rolling sum; prev7 = previous 7‑day rolling sum; `velocity = (d7 - prev7) / prev7`.
+- **Price Momentum (per term)**  
+  Ratio of 7‑day rolling **median** price vs prior 7‑day median.
+- **Weather Lift (per term)**  
+  Mean frequency on rainy days ÷ overall mean frequency.
+- **Runway → Resale Lag (per term)**  
+  First day where 7‑day rolling counts ≥ **3×** the term’s mean, minus show date.
