@@ -1,4 +1,4 @@
-# Microtrend Radar (SQL‑first)
+# Microtrend Radar 
 
 **Street‑to‑Store Fashion Signals**: a SQL‑forward project that detects neighborhood‑level (SoHo & Williamsburg) fashion microtrends from resale listings and related signals (weather, runway).
 
@@ -114,8 +114,6 @@ microtrend-radar-sql/
 │  ├─ weather_lift.csv
 ├─ docker-compose.yml                  # Postgres + PostGIS + Metabase + Adminer
 ├─ .env.example
-├─ LICENSE
-└─ README.md
 ```
 
 
