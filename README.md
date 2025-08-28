@@ -1,6 +1,6 @@
 # Microtrend Radar 
 
-**Street‑to‑Store Fashion Signals**: a SQL‑forward project that detects neighborhood‑level (SoHo & Williamsburg) fashion microtrends from resale listings and related signals (weather, runway).
+**Street‑to‑Store Fashion Signals**: a SQL‑forward project that detects neighborhood‑level (SoHo & Williamsburg) fashion microtrends from resale listings and related signals (weather).
 
 ---
 
