@@ -1,0 +1,5 @@
+
+data/* linguist-vendored
+docs/* linguist-documentation
+
+*.sql linguist-language=SQL
