@@ -16,10 +16,10 @@
 
 ## 2) Data Inputs (synthetic for demo)
 
-- **Listings (400 rows)** — platform, title, brand, price, timestamp, lon/lat, `tags` (JSON array).  
-- **Neighborhoods** — SoHo & Williamsburg polygons (coarse demo shapes).  
-- **Terms** — canonical tags plus synonyms (e.g., `metallic` ⇔ `chrome`, `silver`, `foil`).  
-- **Weather (daily)** — clear/rain flags across the time window.  
+- **Listings (400 rows)**: platform, title, brand, price, timestamp, lon/lat, `tags` (JSON array).  
+- **Neighborhoods**: SoHo & Williamsburg polygons (coarse demo shapes).  
+- **Terms**: canonical tags plus synonyms (e.g., `metallic` ⇔ `chrome`, `silver`, `foil`).  
+- **Weather (daily)**: clear/rain flags across the time window.  
 
 ---
 
