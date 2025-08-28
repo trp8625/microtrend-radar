@@ -23,7 +23,18 @@
 
 ---
 
-## 3) Approach 
+## 3) Metric Definitions
+
+- **Trend Velocity (per neighborhood, term)**  
+  d7 = 7‑day rolling sum; prev7 = previous 7‑day rolling sum; `velocity = (d7 - prev7) / prev7`.
+- **Price Momentum (per term)**  
+  Ratio of 7‑day rolling **median** price vs prior 7‑day median.
+- **Weather Lift (per term)**  
+  Mean frequency on rainy days ÷ overall mean frequency.
+
+---
+
+## 4) Approach 
 
 1. **Normalize tags → canonical terms** via a synonyms table.  
 2. **Geo‑join** listings into neighborhoods using lon/lat and polygons (PostGIS).  
@@ -36,7 +47,7 @@
 
 ---
 
-## 4) Key Results (from the 400‑row demo run)
+## 5) Key Results (from the 400‑row demo run)
 
 **Latest day analyzed:** **2025‑08‑09**
 
@@ -58,7 +69,7 @@ Prices are moving differently than volume:
 Weather had little impact on term frequency in this window: 
 - Rain-day activity was roughly the same as average
 
-### 4.1 Trend Velocity (d7 vs prev7) — top items
+### 5.1 Trend Velocity (d7 vs prev7) — top items
 - **Williamsburg · ballet flats** — d7 = 6, prev7 = 1 → **+500%**
 - **SoHo · ballet flats** — d7 = 5, prev7 = 3 → **+66.7%**
 - **SoHo · metallic** — d7 = 8, prev7 = 7 → **+14.3%**
@@ -67,14 +78,14 @@ Weather had little impact on term frequency in this window:
 
 > Source: `outputs/velocity_latest.csv`
 
-### 4.2 Price Momentum (7‑day median vs prior 7‑day) — by term
+### 5.2 Price Momentum (7‑day median vs prior 7‑day) — by term
 - **neon green:** **+23.5%** (74.82 → 60.59)  
 - **metallic:** −11.5% (68.35 → 77.20)  
 - **ballet flats:** −25.0% (89.83 → 119.83)
 
 > Source: `outputs/price_momentum_latest.csv`
 
-### 4.3 Weather Lift (rain vs average) — by term
+### 5.3 Weather Lift (rain vs average) — by term
 - **neon green:** ~**1.03×**  
 - **metallic:** ~0.98×  
 - **ballet flats:** ~0.96×
@@ -83,7 +94,7 @@ Weather had little impact on term frequency in this window:
 
 ---
 
-## 5) Repository Layout
+## 6) Repository Layout
 
 ```
 microtrend-radar-sql/
@@ -107,13 +118,4 @@ microtrend-radar-sql/
 └─ README.md
 ```
 
-## 6) Metric Definitions
 
-- **Trend Velocity (per neighborhood, term)**  
-  d7 = 7‑day rolling sum; prev7 = previous 7‑day rolling sum; `velocity = (d7 - prev7) / prev7`.
-- **Price Momentum (per term)**  
-  Ratio of 7‑day rolling **median** price vs prior 7‑day median.
-- **Weather Lift (per term)**  
-  Mean frequency on rainy days ÷ overall mean frequency.
-- **Runway → Resale Lag (per term)**  
-  First day where 7‑day rolling counts ≥ **3×** the term’s mean, minus show date.
